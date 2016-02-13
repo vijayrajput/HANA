@@ -1,0 +1,34 @@
+namespace bootcamp.DB;
+
+@Schema: 'SYSTEM'
+
+context JobModel{
+    type Name: String(50);
+    type ID : String(10);
+    type SortDesc : String(100);
+    
+    type SystemFields {
+    CREATED_ON : UTCTimestamp ;
+    CREATED_BY : ID ;
+    }
+    
+    entity Job {
+    key JOBID : ID;
+    DESCRIPTION: SortDesc;
+    DEPARTMENT: Name;
+    VALID_TILL : UTCTimestamp;
+    SYSTEM: SystemFields;
+    ENROLMENTS : Association[0..*] to Enrollment { JOBID };
+    }
+    
+    entity Enrollment {
+    key JOBID : ID;
+    key PERSONID : ID;
+    FIRST_NAME : Name;
+    LAST_NAME : Name;
+    EMAIL : Name;
+    LOCATION : Name;
+    SYSTEM: SystemFields;
+    JOB_RELATION : Association[*] to Job on JOB_RELATION.JOBID = JOBID;
+    }
+}
