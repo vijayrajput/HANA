@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_LOCATION" applyPrivilegeType="ANALYTIC_PRIVILEGE" dataCategory="CUBE" dimensionType="STANDARD" schemaVersion="2.3" defaultClient="$$client$$" visibility="reportingEnabled" outputViewType="Aggregation" calculationScenarioType="TREE_BASED" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_LOCATION"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="bootcamp.DB::JobModel.Job" type="DATA_BASE_TABLE">
+    <viewAttributes allViewAttributes="true"/>
+    <columnObject schemaName="SYSTEM" columnObjectName="bootcamp.DB::JobModel.Job"/>
+  </DataSource>
+  <DataSource id="bootcamp.DB::JobModel.Enrollment" type="DATA_BASE_TABLE">
+    <viewAttributes allViewAttributes="true"/>
+    <columnObject schemaName="SYSTEM" columnObjectName="bootcamp.DB::JobModel.Enrollment"/>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="DEPARTMENT"/>
+      <viewAttribute id="JOBID"/>
+      <viewAttribute id="VALID_TILL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="#bootcamp.DB::JobModel.Job">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEPARTMENT" source="DEPARTMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOBID" source="JOBID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TILL" source="VALID_TILL"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="JOBID"/>
+      <viewAttribute id="LOCATION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="#bootcamp.DB::JobModel.Enrollment">
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOBID" source="JOBID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION" source="LOCATION"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner" cardinality="C1_N">
+    <viewAttributes>
+      <viewAttribute id="DEPARTMENT"/>
+      <viewAttribute id="JOBID"/>
+      <viewAttribute id="VALID_TILL"/>
+      <viewAttribute id="LOCATION"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Count" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="#Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEPARTMENT" source="DEPARTMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOBID" source="JOBID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TILL" source="VALID_TILL"/>
+    </input>
+    <input node="#Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION" source="LOCATION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOBID" source="JOBID"/>
+    </input>
+    <joinAttribute name="JOBID"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="DEPARTMENT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DEPARTMENT"/>
+      <keyMapping columnObjectName="Join_1" columnName="DEPARTMENT"/>
+    </attribute>
+    <attribute id="JOBID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="JOBID"/>
+      <keyMapping columnObjectName="Join_1" columnName="JOBID"/>
+    </attribute>
+    <attribute id="LOCATION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION"/>
+      <keyMapping columnObjectName="Join_1" columnName="LOCATION"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="Count" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Count"/>
+      <measureMapping columnObjectName="Join_1" columnName="Count"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="5" y="263"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="79" y="358"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="98" y="198"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
